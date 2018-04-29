@@ -1,0 +1,23 @@
+{
+  "name": "electron-world-clock",
+  "version": "1.0.0",
+  "description": "This is a simple electron app used to display your times in one place",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaluvadis/electron-world-clock.git"
+  },
+  "keywords": [],
+  "author": "Surendra Chaluvadi <surendra.chaluvadi@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chaluvadis/electron-world-clock/issues"
+  },
+  "homepage": "https://github.com/chaluvadis/electron-world-clock#readme",
+  "devDependencies": {
+    "electron": "1.8.6"
+  }
+}
