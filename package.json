@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/chaluvadis/electron-world-clock#readme",
   "devDependencies": {
-    "electron": "1.8.6"
+    "electron": "1.8.6",
+    "electron-prebuilt": "1.4.13",
+    "electron-reload": "1.2.2"
   }
 }

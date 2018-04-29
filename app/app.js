@@ -2,8 +2,20 @@
   var staticURL = "https://timezoneapi.io/api/address/?";
   var cities = ["Chicago", "Kanigiri", "Dubai", "Oman"];
   var addressList = cities.map(data => get(staticURL + data));
-
   var times = document.getElementById("times");
+
+  function isOnLine() {
+    return navigator.onLine;
+  }
+
+  function getRandomColor() {
+    return (
+      "#" +
+      Math.random()
+        .toString(16)
+        .substr(2, 6)
+    );
+  }
 
   function get(url) {
     return new Promise(function(resolve, reject) {
@@ -27,12 +39,18 @@
     var result = JSON.parse(response);
     if (result.meta.code === "200") {
       var address = result.data.addresses[0];
-      console.log(address);
-      var list = `<li class="time-list">
+      var obj = {
+        geoid: address.timezone.geoname_id,
+        address: address.formatted_address,
+        timezone: address.datetime.offset_tzab,
+        offset: address.datetime.offset_minutes
+      };
+      var background = getRandomColor();
+      storage.set(obj.geoid, JSON.stringify(obj));
+      var style = `background-color:${background}; color: white; font-weight:bold`;
+      var list = `<li class="time-list" style=${style}>
             <div class="time-city">
                 <div class="city">${address.formatted_address}</div>
-                <div class="state">${address.country}</div>
-                <div class="timezone">${address.datetime.offset_tzab}</div>
                 <div class="time">${address.datetime.time}</div>
             </div>
         </li>`;
@@ -41,10 +59,15 @@
   }
 
   function startUp() {
-    var promises = Promise.all(addressList);
-    promises.then(function(results) {
-      results.map(res => processResponse(res));
-    });
+    if (isOnLine()) {
+      var promises = Promise.all(addressList);
+      promises.then(function(results) {
+        storage.clear();
+        results.map(res => processResponse(res));
+      });
+    } else {
+      // load data from localstorage
+    }
   }
   startUp();
 })();

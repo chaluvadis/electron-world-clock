@@ -1,11 +1,17 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const url = require("url");
-
+require("electron-reload")(__dirname, {
+  electron: require("electron-prebuilt")
+});
 let win;
-
 createWindow = () => {
-  win = new BrowserWindow({ width: 800, height: 600 });
+  win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    experimentalFeatures: true,
+    blinkFeatures: "CSSGridLayout"
+  });
   win.loadURL(
     url.format({
       pathname: path.join(__dirname, "./app/index.html"),
