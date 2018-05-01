@@ -1,6 +1,6 @@
 (function() {
   var staticURL = "https://timezoneapi.io/api/address/?";
-  var cities = ["Chicago", "Kanigiri", "Dubai", "Oman"];
+  var cities = ["Chicago", "Kanigiri", "Dubai", "Oman", "Singapore", "Seattle"];
   var addressList = cities.map(data => get(staticURL + data));
   var times = document.getElementById("times");
 
@@ -35,7 +35,7 @@
     });
   }
 
-  function processResponse(response) {
+  function processResponse(response, length) {
     var result = JSON.parse(response);
     if (result.meta.code === "200") {
       var address = result.data.addresses[0];
@@ -47,7 +47,8 @@
       };
       var background = getRandomColor();
       storage.set(obj.geoid, JSON.stringify(obj));
-      var style = `background-color:${background}; color: white; font-weight:bold`;
+      var height = `${parseFloat(100 / length).toFixed(1).toString()}vh`; 
+      var style = `background-color:${background};height:${height}`;
       var list = `<li class="time-list" style=${style}>
             <div class="time-city">
                 <div class="city">${address.formatted_address}</div>
@@ -63,7 +64,8 @@
       var promises = Promise.all(addressList);
       promises.then(function(results) {
         storage.clear();
-        results.map(res => processResponse(res));
+        var length = results.length;
+        results.map(res => processResponse(res, length));
       });
     } else {
       // load data from localstorage
