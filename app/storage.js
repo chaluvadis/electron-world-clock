@@ -6,12 +6,14 @@ var storage = (function() {
     set: function(key, value) {
       localStorage.setItem(key, value);
     },
-    clear: function () {
-      console.info('clear local storage');
+    clear: function() {
       localStorage.clear();
     },
     remove: function(item) {
       return localStorage.removeItem(item);
+    },
+    hasData: function() {
+      return localStorage.length > 0;
     }
   };
 })();

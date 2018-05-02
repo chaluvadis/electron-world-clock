@@ -3,20 +3,6 @@
   var cities = ["Chicago", "Kanigiri", "Dubai", "Oman", "Singapore", "Seattle"];
   var addressList = cities.map(data => get(staticURL + data));
   var times = document.getElementById("times");
-
-  function isOnLine() {
-    return navigator.onLine;
-  }
-
-  function getRandomColor() {
-    return (
-      "#" +
-      Math.random()
-        .toString(16)
-        .substr(2, 6)
-    );
-  }
-
   function get(url) {
     return new Promise(function(resolve, reject) {
       var req = new XMLHttpRequest();
@@ -35,40 +21,52 @@
     });
   }
 
-  function processResponse(response, length) {
-    var result = JSON.parse(response);
+  function setLocalStorage(results) {}
+
+  function generateTimeNode(obj, length) {
+    var background = app.getRandomColor();
+    var height = app.nodeHeight(length);
+    var style = `background-color:${background};height:${height}`;
+    var list = `<li class="time-list" style=${style}>
+            <div id=${obj.geoid} class="time-city">
+                <div class="city">${obj.address}</div>
+                <div class="time">${obj.time}</div>
+            </div>
+        </li>`;
+    return list;
+  }
+
+  function processResponse(result, length) {
+    // var result = JSON.parse(response);
     if (result.meta.code === "200") {
       var address = result.data.addresses[0];
       var obj = {
         geoid: address.timezone.geoname_id,
         address: address.formatted_address,
         timezone: address.datetime.offset_tzab,
-        offset: address.datetime.offset_minutes
+        offset: address.datetime.offset_minutes,
+        time: address.datetime.time
       };
-      var background = getRandomColor();
-      storage.set(obj.geoid, JSON.stringify(obj));
-      var height = `${parseFloat(100 / length).toFixed(1).toString()}vh`; 
-      var style = `background-color:${background};height:${height}`;
-      var list = `<li class="time-list" style=${style}>
-            <div class="time-city">
-                <div class="city">${address.formatted_address}</div>
-                <div class="time">${address.datetime.time}</div>
-            </div>
-        </li>`;
-      times.insertAdjacentHTML("beforeend", list);
+      var node = generateTimeNode(obj, length);
+      times.insertAdjacentHTML("beforeend", node);
     }
   }
 
   function startUp() {
-    if (isOnLine()) {
+    if (!storage.hasData()) {
+      console.log("Local storage has no data");
       var promises = Promise.all(addressList);
       promises.then(function(results) {
-        storage.clear();
+        storage.set(app.appName(), JSON.stringify(results));
         var length = results.length;
-        results.map(res => processResponse(res, length));
+        results.map(res => processResponse(JSON.parse(res), length));
       });
     } else {
-      // load data from localstorage
+      console.log("Local storage has data");
+      var localData = storage.get(app.appName());
+      var jsonData = JSON.parse(localData);
+      var length = jsonData.length;
+      jsonData.map(res => processResponse(JSON.parse(res), length));
     }
   }
   startUp();

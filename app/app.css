@@ -39,6 +39,9 @@ body {
   outline: 0;
   cursor: pointer;
   float: right;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 30px;
 }
 
 .footer {
