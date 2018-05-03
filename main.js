@@ -10,7 +10,9 @@ createWindow = () => {
     width: 800,
     height: 600,
     experimentalFeatures: true,
-    blinkFeatures: "CSSGridLayout"
+    blinkFeatures: "CSSGridLayout",
+    backgroundColor: '#303030',
+    icon: path.join(__dirname, './assets/icons/png/appicon.png')
   });
   win.loadURL(
     url.format({

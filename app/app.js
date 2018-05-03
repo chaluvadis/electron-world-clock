@@ -21,13 +21,23 @@
     });
   }
 
-  function setLocalStorage(results) {}
+
+
+  function setUpTimer() {
+    var elements = document.querySelectorAll(".time-list");
+    elements.forEach(ele => {
+      var offset = ele.getAttribute('data-offset');
+      var date = dateTime.getOffSetTime(offset);
+      var city = ele.getAttribute('data-city');
+      console.log('city', city,'offset', offset, 'date', date);
+    });
+  }
 
   function generateTimeNode(obj, length) {
     var background = app.getRandomColor();
     var height = app.nodeHeight(length);
     var style = `background-color:${background};height:${height}`;
-    var list = `<li class="time-list" style=${style}>
+    var list = `<li class="time-list" data-city=${obj.address} data-offset=${obj.offset} style=${style}>
             <div id=${obj.geoid} class="time-city">
                 <div class="city">${obj.address}</div>
                 <div class="time">${obj.time}</div>
@@ -60,6 +70,7 @@
         storage.set(app.appName(), JSON.stringify(results));
         var length = results.length;
         results.map(res => processResponse(JSON.parse(res), length));
+        setUpTimer();
       });
     } else {
       console.log("Local storage has data");
@@ -67,6 +78,7 @@
       var jsonData = JSON.parse(localData);
       var length = jsonData.length;
       jsonData.map(res => processResponse(JSON.parse(res), length));
+      setUpTimer();
     }
   }
   startUp();
