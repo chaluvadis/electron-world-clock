@@ -21,23 +21,28 @@
     });
   }
 
-
-
-  function setUpTimer() {
+  function updateTime() {
     var elements = document.querySelectorAll(".time-list");
     elements.forEach(ele => {
-      var offset = ele.getAttribute('data-offset');
+      var offset = ele.getAttribute("data-offset");
       var date = dateTime.getOffSetTime(offset);
-      var city = ele.getAttribute('data-city');
-      console.log('city', city,'offset', offset, 'date', date);
+      var city = ele.getAttribute("data-city");
+      var time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+      console.log("city", city, "date", time);
     });
+  }
+
+  function setUpTimer() {
+    setInterval(updateTime, 1000);
   }
 
   function generateTimeNode(obj, length) {
     var background = app.getRandomColor();
     var height = app.nodeHeight(length);
     var style = `background-color:${background};height:${height}`;
-    var list = `<li class="time-list" data-city=${obj.address} data-offset=${obj.offset} style=${style}>
+    var list = `<li class="time-list" data-city=${obj.address} data-offset=${
+      obj.offset
+    } style=${style}>
             <div id=${obj.geoid} class="time-city">
                 <div class="city">${obj.address}</div>
                 <div class="time">${obj.time}</div>
@@ -63,15 +68,19 @@
   }
 
   function startUp() {
+    storage.clear();
     if (!storage.hasData()) {
       console.log("Local storage has no data");
       var promises = Promise.all(addressList);
-      promises.then(function(results) {
-        storage.set(app.appName(), JSON.stringify(results));
-        var length = results.length;
-        results.map(res => processResponse(JSON.parse(res), length));
-        setUpTimer();
-      });
+      promises
+        .then(function(results) {
+          storage.set(app.appName(), JSON.stringify(results));
+          var length = results.length;
+          results.map(res => processResponse(JSON.parse(res), length));
+        })
+        .then(function() {
+          setUpTimer();
+        });
     } else {
       console.log("Local storage has data");
       var localData = storage.get(app.appName());

@@ -9,7 +9,8 @@ var dateTime = (function() {
     getOffSetTime: function (offset) {
       var date = new Date();
       var localOffset = date.getTimezoneOffset();
-      date.setMinutes(offset+localOffset);
+      var minutes = date.getMinutes();
+      date.setMinutes(offset+localOffset+minutes);
       return date;
     }
   };
