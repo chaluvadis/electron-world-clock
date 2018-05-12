@@ -1,4 +1,4 @@
-(function() {
+var app = (function() {
   var staticURL = "https://timezoneapi.io/api/address/?";
   var cities = ["Chicago", "Kanigiri", "Dubai", "Oman", "Singapore", "Seattle"];
   var addressList = cities.map(data => get(staticURL + data));
@@ -37,8 +37,8 @@
   }
 
   function generateTimeNode(obj, length) {
-    var background = app.getRandomColor();
-    var height = app.nodeHeight(length);
+    var background = appConstants.getRandomColor();
+    var height = appConstants.nodeHeight(length);
     var style = `background-color:${background};height:${height}`;
     var list = `<li class="time-list" data-city=${obj.address} data-offset=${
       obj.offset
@@ -67,28 +67,29 @@
     }
   }
 
-  function startUp() {
-    storage.clear();
-    if (!storage.hasData()) {
-      console.log("Local storage has no data");
-      var promises = Promise.all(addressList);
-      promises
-        .then(function(results) {
-          storage.set(app.appName(), JSON.stringify(results));
-          var length = results.length;
-          results.map(res => processResponse(JSON.parse(res), length));
-        })
-        .then(function() {
-          setUpTimer();
-        });
-    } else {
-      console.log("Local storage has data");
-      var localData = storage.get(app.appName());
-      var jsonData = JSON.parse(localData);
-      var length = jsonData.length;
-      jsonData.map(res => processResponse(JSON.parse(res), length));
-      setUpTimer();
+  return {
+    startUp: function() {
+      storage.clear();
+      if (!storage.hasData()) {
+        console.log("Local storage has no data");
+        var promises = Promise.all(addressList);
+        promises
+          .then(function(results) {
+            storage.set(appConstants.appName(), JSON.stringify(results));
+            var length = results.length;
+            results.map(res => processResponse(JSON.parse(res), length));
+          })
+          .then(function() {
+            setUpTimer();
+          });
+      } else {
+        console.log("Local storage has data");
+        var localData = storage.get(appConstants.appName());
+        var jsonData = JSON.parse(localData);
+        var length = jsonData.length;
+        jsonData.map(res => processResponse(JSON.parse(res), length));
+        setUpTimer();
+      }
     }
-  }
-  startUp();
+  };
 })();

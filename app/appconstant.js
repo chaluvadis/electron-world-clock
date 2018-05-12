@@ -1,4 +1,4 @@
-var app = (function() {
+var appConstants = (function() {
   var APP_NAME = "MyClock";
   return {
     appName: function() {
