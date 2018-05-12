@@ -1,9 +1,9 @@
 # My Clock
-This is a simple electron app used to display your times in one place
+This simple clock allow the user to add their fav places to monitor the times, runs on pure client side.
+
+For adding new times user must connected to internet.
 
 ## TODO
--[] Read data from local storage
 -[] Allow user to add times
 -[] Service Worker Support
--[] Design
 -[] Test Cases
